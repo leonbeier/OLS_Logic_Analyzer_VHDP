@@ -1,0 +1,92 @@
+Component OLS_Logic_Analyzer_2_tb()
+{
+    SIGNAL finished : STD_LOGIC:= '0';
+    CONSTANT period_time : TIME := 83333 ps;
+
+    Process Sim_finished()
+    {
+        wait for 1 sec;
+        finished <= '1';
+        wait;
+    }
+
+    NewComponent OLS_Logic_Analyzer_2
+    (
+        UART_RX => OLS_Interface_UART_RX,
+        UART_TX => OLS_Interface_UART_TX,
+        GPIO => GPIO,
+        LED => LED,
+        BTN => BTN,
+        UART_Debug => UART_Debug,
+        CLK => CLK,
+    );
+
+    SIGNAL OLS_Interface_UART_RX : STD_LOGIC  := '1';
+    SIGNAL OLS_Interface_UART_TX : STD_LOGIC  := '1';
+    SIGNAL GPIO : STD_LOGIC_VECTOR (31 downto 0);
+    SIGNAL LED : STD_LOGIC ;
+    SIGNAL BTN : STD_LOGIC ;
+    SIGNAL UART_Debug : STD_LOGIC ;
+    SIGNAL CLK : STD_LOGIC := '0';
+
+    OLS_Interface_UART_RX <= UART_Interface_TX;
+
+    Process Sim_BTN()
+    {
+        While(finished /= '1')
+        {
+            wait;
+        }
+        wait;
+    }
+
+    Process Sim_CLK()
+    {
+        While(finished /= '1')
+        {
+            CLK <= '0';
+            wait for period_time/2;
+            CLK <= '1';
+            wait for period_time/2;
+        }
+        wait;
+    }
+    
+    Process ()
+    {
+        While(finished /= '1')
+        {
+            wait until rising_edge(CLK);
+            Thread
+            {
+                NewFunction write (x"01", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                /*
+                NewFunction write (x"81", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                wait for 5 ms;
+                NewFunction write (x"12", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                wait for 5 ms;
+                NewFunction write (x"34", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                NewFunction write (x"56", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                NewFunction write (x"78", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                */
+            }
+        }
+        wait;
+    }
+    
+    SIGNAL UART_Interface_TX            : STD_LOGIC := '1';
+    SIGNAL UART_Interface_TX_Enable     : STD_LOGIC := '0';
+    SIGNAL UART_Interface_TX_Busy       : STD_LOGIC := '0';
+    SIGNAL UART_Interface_TX_Data       : STD_LOGIC_VECTOR (8-1 DOWNTO 0) := (others => '0');
+    NewComponent UART_Interface
+    (
+        CLK_Frequency => 12000000,
+        Baud_Rate     => 115200,
+
+        Reset         => '0',
+        TX            =>UART_Interface_TX,
+        TX_Enable     =>UART_Interface_TX_Enable,
+        TX_Busy       =>UART_Interface_TX_Busy,
+        TX_Data       =>UART_Interface_TX_Data,
+    );
+}
