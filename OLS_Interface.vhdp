@@ -11,7 +11,7 @@ Component OLS_Interface
     
     Inputs       : IN  STD_LOGIC_VECTOR(31 downto 0) := (others => '0');  --Data inpits for trigger
     
-    Rate_Div     : OUT NATURAL range 1 to CLK_Frequency := 12; --12 = CLK_Frequency/12 = 1Mio samples per second
+    Rate_Div     : BUFFER NATURAL range 1 to CLK_Frequency := 12; --12 = CLK_Frequency/12 = 1Mio samples per second
     Samples      : BUFFER NATURAL range 1 to Max_Samples   := Max_Samples;  --Samples to save with offset samples
     Start_Offset : BUFFER NATURAL range 0 to Max_Samples   := 0;  --Number of samples that are saved before start changes to '1' to see the data before the trigger point
     
@@ -60,7 +60,7 @@ Component OLS_Interface
     
     
     SIGNAL ISSP_source : std_logic_vector (7 downto 0);
-    SIGNAL ISSP_probe  : std_logic_vector (31 downto 0) := (others => 'X');
+    SIGNAL ISSP_probe  : std_logic_vector (31 downto 0) := (others => '0');
     NewComponent ISSP
     (
         source =>ISSP_source,
@@ -68,15 +68,19 @@ Component OLS_Interface
     );
     
     SIGNAL ISSP1_source : std_logic_vector (7 downto 0);
-    SIGNAL ISSP1_probe  : std_logic_vector (31 downto 0) := (others => 'X');
+    SIGNAL ISSP1_probe  : std_logic_vector (31 downto 0) := (others => '0');
     NewComponent ISSP
     (
         source =>ISSP1_source,
         probe  =>ISSP1_probe,
     );
     
-    ISSP_probe <= STD_LOGIC_VECTOR(TO_UNSIGNED(Start_Offset, 32));
-    ISSP1_probe <= STD_LOGIC_VECTOR(TO_UNSIGNED(Samples, 32));
+    --ISSP_probe <= STD_LOGIC_VECTOR(TO_UNSIGNED(Divider, 32));
+    --ISSP1_probe <= STD_LOGIC_VECTOR(TO_UNSIGNED(Rate_Div, 32));
+    ISSP1_probe(8) <= Run;
+    ISSP1_probe(9) <= Run_OLS;
+    ISSP1_probe(10) <= Full;
+    
     
     Process ()
     {
@@ -137,13 +141,13 @@ Component OLS_Interface
             {
                 Thread
                 {
-                    VARIABLE addr : NATURAL range 0 to 262140 := 0;
-                    For(addr := 0; addr < Samples; addr := addr + 1)
+                    SIGNAL addr : NATURAL range 0 to 262140 := 0;
+                    For(addr <= 0; addr < Samples; addr <= addr + 1)
                     {
                         Address <= addr;
-                        For(ctr := 0; ctr < 4; ctr := ctr + 1)
+                        For(SIGNAL wr_ctr : NATURAL range 0 to 4 := 0; wr_ctr < 4; wr_ctr <= wr_ctr + 1)
                         {
-                            NewFunction write (Outputs((ctr+1)*8-1 downto ctr*8), UART_TX_Data, UART_TX_Busy, UART_TX_Enable);
+                            NewFunction write (Outputs((wr_ctr+1)*8-1 downto wr_ctr*8), UART_TX_Data, UART_TX_Busy, UART_TX_Enable);
                         }
                     }
                     Wait(150ms);
@@ -157,6 +161,7 @@ Component OLS_Interface
         Thread
         {
             NewFunction read (command, UART_RX_Data, UART_RX_Busy);
+            ISSP_probe <= x"00000001";
             If(command(7) = '0')  --short command
             {
                 Case(command)
@@ -175,9 +180,9 @@ Component OLS_Interface
                     }
                     When(x"02")
                     {
-                        For(ctr := 4; ctr > 0; ctr := ctr - 1)
+                        For(wr_ctr <= 4; wr_ctr > 0; wr_ctr <= wr_ctr - 1)
                         {
-                            NewFunction write (ID(ctr*8-1 downto (ctr-1)*8), UART_TX_Data, UART_TX_Busy, UART_TX_Enable);
+                            NewFunction write (ID(wr_ctr*8-1 downto (wr_ctr-1)*8), UART_TX_Data, UART_TX_Busy, UART_TX_Enable);
                         }
                     }
                     When(x"11")
@@ -196,10 +201,12 @@ Component OLS_Interface
             }
             Else  --long command
             {
+                ISSP_probe <= x"00000002";
                 For(VARIABLE ctr : INTEGER range 0 to 4 := 0; ctr < 4; ctr := ctr + 1)
                 {
                     NewFunction read (data((ctr+1)*8-1 downto ctr*8), UART_RX_Data, UART_RX_Busy);
                 }
+                ISSP_probe <= x"00000003";
                 Case(command)
                 {
                     When(x"c0")
@@ -220,7 +227,9 @@ Component OLS_Interface
                     }
                     When(x"80")
                     {
+                        ISSP_probe <= x"00000004";
                         Divider <= TO_INTEGER(UNSIGNED(data(23 downto 0)));
+                        ISSP_probe <= x"00000005";
                     }
                     When(x"81")
                     {

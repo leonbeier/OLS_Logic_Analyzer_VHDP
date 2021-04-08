@@ -60,6 +60,15 @@ Component OLS_Logic_Analyzer_2_tb()
             Thread
             {
                 NewFunction write (x"01", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                wait for 5 ms;
+                NewFunction write (x"01", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                /*
+                NewFunction write (x"80", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                NewFunction write (x"05", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                NewFunction write (x"00", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                NewFunction write (x"00", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                NewFunction write (x"00", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
+                */
                 /*
                 NewFunction write (x"81", UART_Interface_TX_Data, UART_Interface_TX_Busy, UART_Interface_TX_Enable);
                 wait for 5 ms;
