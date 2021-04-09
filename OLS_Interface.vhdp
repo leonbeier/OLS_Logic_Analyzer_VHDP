@@ -58,7 +58,7 @@ Component OLS_Interface
     SIGNAL External : STD_LOGIC := '0'; --Selects the clock to be used for sampling. If set to 0, the internal clock divided by the configured divider is used, and if set to 1, the external clock will be used
     SIGNAL Inverted : STD_LOGIC := '0'; --When set to 1, the external clock will be inverted before being used
     
-    
+    /*
     SIGNAL ISSP_source : std_logic_vector (7 downto 0);
     SIGNAL ISSP_probe  : std_logic_vector (31 downto 0) := (others => '0');
     NewComponent ISSP
@@ -80,7 +80,7 @@ Component OLS_Interface
     ISSP1_probe(8) <= Run;
     ISSP1_probe(9) <= Run_OLS;
     ISSP1_probe(10) <= Full;
-    
+    */
     
     Process ()
     {
@@ -150,7 +150,7 @@ Component OLS_Interface
                             NewFunction write (Outputs((wr_ctr+1)*8-1 downto wr_ctr*8), UART_TX_Data, UART_TX_Busy, UART_TX_Enable);
                         }
                     }
-                    Wait(150ms);
+                    Wait(1ms);
                     Run_OLS <= '0';
                     Run <= '0';
                 }
@@ -161,7 +161,7 @@ Component OLS_Interface
         Thread
         {
             NewFunction read (command, UART_RX_Data, UART_RX_Busy);
-            ISSP_probe <= x"00000001";
+            --ISSP_probe <= x"00000001";
             If(command(7) = '0')  --short command
             {
                 Case(command)
@@ -201,12 +201,12 @@ Component OLS_Interface
             }
             Else  --long command
             {
-                ISSP_probe <= x"00000002";
+                --ISSP_probe <= x"00000002";
                 For(VARIABLE ctr : INTEGER range 0 to 4 := 0; ctr < 4; ctr := ctr + 1)
                 {
                     NewFunction read (data((ctr+1)*8-1 downto ctr*8), UART_RX_Data, UART_RX_Busy);
                 }
-                ISSP_probe <= x"00000003";
+                --ISSP_probe <= x"00000003";
                 Case(command)
                 {
                     When(x"c0")
@@ -227,9 +227,7 @@ Component OLS_Interface
                     }
                     When(x"80")
                     {
-                        ISSP_probe <= x"00000004";
                         Divider <= TO_INTEGER(UNSIGNED(data(23 downto 0)));
-                        ISSP_probe <= x"00000005";
                     }
                     When(x"81")
                     {

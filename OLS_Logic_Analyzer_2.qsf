@@ -32,11 +32,9 @@ set_location_assignment PIN_H1 -to VS[0]
 set_location_assignment PIN_B7 -to VS[1]
 set_location_assignment PIN_L1 -to VS[2]
 set_location_assignment PIN_K13 -to VS_EN
-set_location_assignment PIN_D7 -to BTN
-set_location_assignment PIN_D13 -to LED
 set_location_assignment PIN_J1 -to UART_RX
 set_location_assignment PIN_H4 -to UART_TX
 set_location_assignment PIN_H3 -to GPIO[0]
-set_location_assignment PIN_H2 -to UART_Debug
-set_location_assignment PIN_M9 -to GPIO[1]
-set_location_assignment PIN_M8 -to GPIO[2]
+set_location_assignment PIN_H2 -to GPIO[1]
+set_location_assignment PIN_M9 -to GPIO[2]
+set_location_assignment PIN_M8 -to GPIO[3]

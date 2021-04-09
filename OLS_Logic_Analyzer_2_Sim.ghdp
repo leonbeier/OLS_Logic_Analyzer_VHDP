@@ -15,18 +15,12 @@ Component OLS_Logic_Analyzer_2_tb()
         UART_RX => OLS_Interface_UART_RX,
         UART_TX => OLS_Interface_UART_TX,
         GPIO => GPIO,
-        LED => LED,
-        BTN => BTN,
-        UART_Debug => UART_Debug,
         CLK => CLK,
     );
 
     SIGNAL OLS_Interface_UART_RX : STD_LOGIC  := '1';
     SIGNAL OLS_Interface_UART_TX : STD_LOGIC  := '1';
-    SIGNAL GPIO : STD_LOGIC_VECTOR (31 downto 0);
-    SIGNAL LED : STD_LOGIC ;
-    SIGNAL BTN : STD_LOGIC ;
-    SIGNAL UART_Debug : STD_LOGIC ;
+    SIGNAL GPIO : STD_LOGIC_VECTOR (3 downto 0);
     SIGNAL CLK : STD_LOGIC := '0';
 
     OLS_Interface_UART_RX <= UART_Interface_TX;
