@@ -149,7 +149,10 @@ Component OLS_Interface
                         Address <= addr;
                         For(SIGNAL wr_ctr : NATURAL range 0 to 4 := 0; wr_ctr < 4; wr_ctr <= wr_ctr + 1)
                         {
-                            NewFunction write (Outputs((wr_ctr+1)*8-1 downto wr_ctr*8), UART_TX_Data, UART_TX_Busy, UART_TX_Enable);
+                            If(Channel_Groups(wr_ctr) = '0')
+                            {
+                                NewFunction write (Outputs((wr_ctr+1)*8-1 downto wr_ctr*8), UART_TX_Data, UART_TX_Busy, UART_TX_Enable);
+                            }
                         }
                     }
                     --Wait(CLK_Frequency/10);
