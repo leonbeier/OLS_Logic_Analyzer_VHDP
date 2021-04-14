@@ -126,7 +126,7 @@ Component OLS_Interface
         {
             If(Read_Count > Max_Samples)
             {
-                Start_Offset <= TO_INTEGER(shift_right(TO_UNSIGNED(Max_Samples, 18),6));
+                Start_Offset <= 10;
             }
             Else
             {
