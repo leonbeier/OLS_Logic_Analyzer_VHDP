@@ -4,8 +4,12 @@ Main
     UART_TX       : BUFFER STD_LOGIC := '1';
     
     GPIO          : IN STD_LOGIC_VECTOR(3 downto 0);
+    
+    Test_CLK      : OUT STD_LOGIC;
 )
 {
+    Test_CLK <= CLK; --12MHz
+    
     SIGNAL CLK_200     : STD_LOGIC;
     NewComponent PLL
     (

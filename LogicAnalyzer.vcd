@@ -1,0 +1,128 @@
+$timescale
+  1 fs
+$end
+$scope module logic_analyzer $end
+$var reg 1 ! Channel 0 $end
+$var reg 1 " Channel 1 $end
+$var reg 1 # Channel 2 $end
+$var reg 1 $ Channel 3 $end
+$var reg 1 % Channel 4 $end
+$var reg 1 & Channel 5 $end
+$var reg 1 ' Channel 6 $end
+$var reg 1 ( Channel 7 $end
+$var reg 1 ) Channel 8 $end
+$var reg 1 * Channel 9 $end
+$var reg 1 + Channel 10 $end
+$var reg 1 , Channel 11 $end
+$var reg 1 - Channel 12 $end
+$var reg 1 . Channel 13 $end
+$var reg 1 / Channel 14 $end
+$var reg 1 0 Channel 15 $end
+$var reg 1 1 Channel 16 $end
+$var reg 1 2 Channel 17 $end
+$var reg 1 3 Channel 18 $end
+$var reg 1 4 Channel 19 $end
+$var reg 1 5 Channel 20 $end
+$var reg 1 6 Channel 21 $end
+$var reg 1 7 Channel 22 $end
+$var reg 1 8 Channel 23 $end
+$var reg 1 9 Channel 24 $end
+$var reg 1 : Channel 25 $end
+$var reg 1 ; Channel 26 $end
+$var reg 1 < Channel 27 $end
+$var reg 1 = Channel 28 $end
+$var reg 1 > Channel 29 $end
+$var reg 1 ? Channel 30 $end
+$var reg 1 @ Channel 31 $end
+$upscope $end
+$enddefinitions $end
+#0
+0!
+1"
+1#
+1$
+0%
+0&
+0'
+0(
+0)
+0*
+0+
+0,
+0-
+0.
+0/
+00
+01
+02
+03
+04
+05
+06
+07
+08
+09
+0:
+0;
+0<
+0=
+0>
+0?
+0@
+#30000000
+1!
+#70000000
+0!
+#110000000
+1!
+#155000000
+0!
+#195000000
+1!
+#235000000
+0!
+#280000000
+1!
+#320000000
+0!
+#360000000
+1!
+#405000000
+0!
+#445000000
+1!
+#485000000
+0!
+#500000000
+0!
+1"
+1#
+1$
+0%
+0&
+0'
+0(
+0)
+0*
+0+
+0,
+0-
+0.
+0/
+00
+01
+02
+03
+04
+05
+06
+07
+08
+09
+0:
+0;
+0<
+0=
+0>
+0?
+0@
